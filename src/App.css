@@ -1,0 +1,35 @@
+.App {
+  text-align: center;
+}
+
+.chat-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.chat-box {
+  width: 300px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.user-message input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.user-message button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.claude-message {
+  margin-top: 20px;
+}
