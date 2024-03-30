@@ -1,33 +1,53 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
+import banner from "../assets/banner2.jpeg";
+import axios from 'axios';
 const Hero1 = () => {
 const [formData, setFormData] = useState({
 name: '',
-location: '',
-budget: '',
-days: ''
+location: ''
 });
 
 console.log(formData,"Typed")
 const [apiResponse, setApiResponse] = useState(null);
 
+// const handleChange = (e) => {
+
+// const { name, value } = e.target;
+// setFormData({
+// ...formData,
+// [name]: value
+// });
+// };
+
 const handleChange = (e) => {
+    const { name, value } = e.target;
 
-const { name, value } = e.target;
-setFormData({
-...formData,
-[name]: value
-});
-};
+    // Check if value contains only characters
+    if (/^[a-zA-Z\s]*$/.test(value) || value === '') {
+      setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+      }));
+      setFormValid(prevValid => formData.name.trim() !== '' && formData.location.trim() !== '');
 
+    }
+  };
   
   
-  const apiUrl = 'Process.env.REACT_APP_CLAUDE_API_KEY';
-  
-  fetch(apiUrl, {
+const apiUrl = 'http://localhost:3000/openApiRes';
+
+    const [formValid, setFormValid] = useState(false);
+
+
+const handleSubmit = (e) => {
+      
+  axios(apiUrl, {
     method: 'POST', // Specify the HTTP method
     headers: {
-      'Content-Type': 'application/json', // Specify the content type
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS" // Specify the content type
       // Add other headers as needed, such as authorization headers
     },
     body: JSON.stringify(formData), // Convert data to JSON format
@@ -46,9 +66,6 @@ setFormData({
       // Handle errors
       console.error('There was a problem with the request:', error);
     });
-  
-
-const handleSubmit = (e) => {
 e.preventDefault();
 
 // You can perhtmlForm any actions with the htmlForm data here, like sending it to an API, etc.
@@ -94,6 +111,13 @@ console.log(apiResponse); // Print the API response to the console
 };
 
 return (
+    <>
+     <div>
+      <img src={banner} alt= "logo" 
+       style={{ width: '100%', height: 'auto' }} 
+       />
+        
+      </div>
 <section className="text-gray-600 body-font relative">
 <form >
   <div className="container px-5 py-24 mx-auto flex sm:flex-nowrap flex-wrap">
@@ -104,7 +128,8 @@ return (
 <ul>
 {apiResponse.content.map((item, index) => (
 <li key={index}>
-<h3>{index + 1}. {item.text.split('\n')[0]}</h3>
+  <h2> t</h2>
+  <h3>{index + 1}. {item.text.split('\n')[0]}</h3>
 <p>{item.text.split('\n').slice(1).join('\n')}</p>
 </li>
 ))}
@@ -121,23 +146,24 @@ return (
       </div>
       <div className="relative mb-4"> 
         <label htmlFor="email" className="leading-7 text-sm text-gray-600">Starting Location</label>
-        <input type="text" id="loation" name="location" value={formData.location} onChange={handleChange}  required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
+        <input type="text" id="location" name="location" value={formData.location} onChange={handleChange}  required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
       </div>
-      <div className="relative mb-4">
-        <label htmlFor="message" className="leading-7 text-sm text-gray-600">Budget htmlFor your tour</label>
-        <input type="number" id="budget" name="budget" value={formData.budget} onChange={handleChange} required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
-      </div>
-      <div className="relative mb-4">
-        <label htmlFor="message" className="leading-7 text-sm text-gray-600">Days to spend</label>
-        <input type="number" id="days" value={formData.days} name="days" onChange={handleChange} required className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"/>
-      </div>
-      <button type="submit" className="text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg" onClick={handleSubmit}>Submit</button>
-   
+     
+  
+      <button 
+        type="submit" 
+        disabled={!formValid} // Disable the button if formValid is false
+        className={`bg-indigo-500 text-white rounded-md px-4 py-2 ${!formValid && 'opacity-50 cursor-not-allowed'}`}
+        onClick={handleSubmit}
+      >
+        Submit
+      </button>   
     </div>
  
   </div>
   </form>
 </section>
+</>
 );
 };
 
